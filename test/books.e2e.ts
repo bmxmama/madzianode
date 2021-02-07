@@ -1,7 +1,9 @@
 import assert from 'assert';
 import supertest from "supertest";
 
-import app from '../src/app';
+import {HTTP} from "../src/consts";
+
+import app from '../src/createApp';
 
 const request = supertest(app);
 
@@ -37,7 +39,7 @@ describe('Books', () => {
         const getBooksRequest = await request
             .get('/books')
             .set('Accept', 'application/json')
-            .expect(200);
+            .expect(HTTP.OK);
 
         assert.deepStrictEqual(getBooksRequest.body, books);
     });
@@ -54,13 +56,13 @@ describe('Books', () => {
             .post('/books')
             .set('Accept', 'application/json')
             .send(payload)
-            .expect(201);
+            .expect(HTTP.CREATED);
 
         // fetch list of books to verify if the added one is present
         const getBooksRequest = await request
             .get('/books')
             .set('Accept', 'application/json')
-            .expect(200);
+            .expect(HTTP.OK);
 
         const booksAfterAdd = books.concat(payload);
 
@@ -80,13 +82,13 @@ describe('Books', () => {
             .put(`/books/${payload.id}`)
             .set('Accept', 'application/json')
             .send(payload)
-            .expect(202);
+            .expect(HTTP.ACCEPTED);
 
         // fetch list of books to verify if the updated one is present
         const getBooksRequest = await request
             .get('/books')
             .set('Accept', 'application/json')
-            .expect(200);
+            .expect(HTTP.OK);
 
         const booksAfterPut = books.concat(payload);
 
@@ -105,13 +107,13 @@ describe('Books', () => {
         await request
             .delete(`/books/${payload.id}`)
             .set('Accept', 'application/json')
-            .expect(202);
+            .expect(HTTP.ACCEPTED);
 
         // fetch list of books to verify if the removed one is present
         const getBooksRequest = await request
             .get('/books')
             .set('Accept', 'application/json')
-            .expect(200);
+            .expect(HTTP.OK);
 
         // we expect the test original book set again
         assert.deepStrictEqual(getBooksRequest.body, books);
