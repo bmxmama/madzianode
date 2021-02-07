@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 
 export interface Book {
     id: number,
@@ -43,6 +43,14 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+
+
+app.use((req: Request, res: Response,  next: NextFunction) => {
+    // console.log('Time:', Date.now())
+    // next()
+
+});
+
 app.get('/books', function (req, res) {
     res.json(books);
 });
@@ -82,6 +90,4 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`Example app listening at http://localhost:${process.env.PORT}`);
-});
+export default app;
